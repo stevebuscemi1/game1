@@ -1,4 +1,6 @@
 // js/utils/sound.js
+// Enhanced Sound Manager with background music
+
 export class SoundManager {
     constructor() {
         this.sounds = {};
@@ -7,24 +9,46 @@ export class SoundManager {
         this.masterVolume = 0.7;
         this.soundEnabled = true;
         this.musicEnabled = true;
+        this.backgroundMusic = null;
+        this.isMuted = false;
         
-        // Sound effect URLs (could be external or base64 encoded)
+        // Sound effect URLs (using base64 encoded simple sounds)
         this.soundUrls = {
-            click: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            pop: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            turnChange: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            command: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            success: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            error: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT'
+            click: this.generateBeepSound(800, 0.1),
+            pop: this.generateBeepSound(600, 0.15),
+            turnChange: this.generateBeepSound(400, 0.2),
+            command: this.generateBeepSound(1000, 0.1),
+            success: this.generateBeepSound(1200, 0.3),
+            error: this.generateBeepSound(300, 0.5)
         };
         
         this.initializeAudioContext();
+    }
+
+    // Generate simple beep sound using Web Audio API
+    generateBeepSound(frequency, duration) {
+        if (!this.audioContext) return null;
+        
+        const sampleRate = this.audioContext.sampleRate;
+        const numSamples = sampleRate * duration;
+        const buffer = this.audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            // Create a simple beep with envelope
+            const envelope = Math.exp(-t * 5);
+            data[i] = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.3;
+        }
+        
+        return buffer;
     }
 
     initializeAudioContext() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.createSoundBuffers();
+            this.setupBackgroundMusic();
         } catch (error) {
             console.warn('Audio context not supported:', error);
             this.soundEnabled = false;
@@ -35,24 +59,67 @@ export class SoundManager {
         if (!this.audioContext) return;
 
         Object.keys(this.soundUrls).forEach(soundName => {
-            try {
-                const base64Data = this.soundUrls[soundName].split(',')[1];
-                const binaryString = atob(base64Data);
-                const bytes = new Uint8Array(binaryString.length);
-                
-                for (let i = 0; i < binaryString.length; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                
-                this.audioContext.decodeAudioData(bytes.buffer, (buffer) => {
-                    this.sounds[soundName] = buffer;
-                }, (error) => {
-                    console.warn(`Failed to decode ${soundName} sound:`, error);
-                });
-            } catch (error) {
-                console.warn(`Failed to create ${soundName} sound buffer:`, error);
+            const buffer = this.soundUrls[soundName];
+            if (buffer) {
+                this.sounds[soundName] = buffer;
             }
         });
+    }
+
+    setupBackgroundMusic() {
+        // Create background music using Web Audio API
+        if (!this.audioContext) return;
+        
+        // Create a simple ambient background music
+        this.createAmbientMusic();
+    }
+
+    createAmbientMusic() {
+        if (!this.audioContext) return;
+        
+        // Create oscillator for background music
+        this.musicOscillator = this.audioContext.createOscillator();
+        this.musicGain = this.audioContext.createGain();
+        
+        // Set up a simple ambient tone
+        this.musicOscillator.type = 'sine';
+        this.musicOscillator.frequency.setValueAtTime(110, this.audioContext.currentTime); // A2 note
+        
+        // Create a gentle gain envelope
+        this.musicGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+        this.musicGain.gain.linearRampToValueAtTime(0.05, this.audioContext.currentTime + 2);
+        
+        // Connect nodes
+        this.musicOscillator.connect(this.musicGain);
+        this.musicGain.connect(this.audioContext.destination);
+        
+        // Start the oscillator
+        this.musicOscillator.start();
+        
+        // Add some variation over time
+        this.addMusicVariation();
+    }
+
+    addMusicVariation() {
+        if (!this.musicOscillator || !this.audioContext) return;
+        
+        // Create subtle frequency variations
+        const varyFrequency = () => {
+            if (!this.musicOscillator || !this.musicEnabled) return;
+            
+            const baseFreq = 110;
+            const variation = Math.sin(this.audioContext.currentTime * 0.1) * 10;
+            this.musicOscillator.frequency.setValueAtTime(
+                baseFreq + variation, 
+                this.audioContext.currentTime
+            );
+            
+            // Schedule next variation
+            setTimeout(varyFrequency, 5000 + Math.random() * 5000);
+        };
+        
+        // Start variations after a delay
+        setTimeout(varyFrequency, 3000);
     }
 
     init() {
@@ -69,7 +136,7 @@ export class SoundManager {
     }
 
     playSound(soundName, volume = 1.0) {
-        if (!this.soundEnabled || !this.audioContext || !this.sounds[soundName]) {
+        if (!this.soundEnabled || this.isMuted || !this.audioContext || !this.sounds[soundName]) {
             return;
         }
 
@@ -112,6 +179,60 @@ export class SoundManager {
         this.playSound('error', 0.5);
     }
 
+    // Background music control
+    playBackgroundMusic() {
+        if (!this.musicEnabled || this.isMuted || !this.audioContext) return;
+        
+        if (this.musicGain) {
+            this.musicGain.gain.linearRampToValueAtTime(0.05, this.audioContext.currentTime + 1);
+        }
+    }
+
+    pauseBackgroundMusic() {
+        if (this.musicGain) {
+            this.musicGain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 1);
+        }
+    }
+
+    // Mute/unmute all sounds
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        
+        if (this.isMuted) {
+            // Mute background music
+            if (this.musicGain) {
+                this.musicGain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
+            }
+            
+            // Update mute button icon
+            const muteButton = document.getElementById('muteBtn');
+            if (muteButton) {
+                muteButton.classList.add('muted');
+                const icon = muteButton.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-volume-mute';
+                }
+            }
+        } else {
+            // Unmute background music if enabled
+            if (this.musicEnabled) {
+                this.playBackgroundMusic();
+            }
+            
+            // Update mute button icon
+            const muteButton = document.getElementById('muteBtn');
+            if (muteButton) {
+                muteButton.classList.remove('muted');
+                const icon = muteButton.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-volume-up';
+                }
+            }
+        }
+        
+        return this.isMuted;
+    }
+
     setMasterVolume(volume) {
         this.masterVolume = Math.max(0, Math.min(1, volume));
     }
@@ -123,11 +244,25 @@ export class SoundManager {
 
     toggleMusic() {
         this.musicEnabled = !this.musicEnabled;
+        
+        if (this.musicEnabled && !this.isMuted) {
+            this.playBackgroundMusic();
+        } else {
+            this.pauseBackgroundMusic();
+        }
+        
         return this.musicEnabled;
     }
 
     cleanup() {
         if (this.audioContext) {
+            // Stop background music
+            if (this.musicOscillator) {
+                this.musicOscillator.stop();
+                this.musicOscillator = null;
+            }
+            
+            // Close audio context
             this.audioContext.close().catch(error => {
                 console.warn('Failed to close audio context:', error);
             });
