@@ -41,8 +41,31 @@
         <!-- Main Menu Screen -->
         <div id="mainMenu" class="screen active" role="main">
             <header class="game-header">
-                <h1>Realms of Adventure</h1>
-                <p class="game-subtitle">Multiplayer D&D-like Game</p>
+                <div class="game-title">
+                    <h1>Realms of Adventure</h1>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="helpMeBtn" class="control-button help-button" aria-label="Help me" title="Get help with game options">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        Help me!
+                    </button>
+                    
+                    <button id="saveGameBtn" class="control-button save-button" aria-label="Save game" title="Save your progress">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        Save Game
+                    </button>
+                    
+                    <button id="endAdventureBtn" class="control-button end-button" aria-label="End adventure" title="End your current adventure">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        End Adventure
+                    </button>
+                    
+                    <button id="muteBtn" class="control-button mute-button" aria-label="Toggle sound" title="Mute/unmute game sounds">
+                        <i class="fas fa-volume-up" aria-hidden="true"></i>
+                        Mute
+                    </button>
+                </div>
             </header>
             
             <section class="menu-section" aria-label="Main Menu">
@@ -95,18 +118,29 @@
         <!-- Game Interface Screen -->
         <div id="gameInterface" class="screen" role="main" aria-hidden="true">
             <header class="game-header">
-                <h2>Realms of Adventure</h2>
+                <div class="game-title">
+                    <h1>Realms of Adventure</h1>
+                </div>
+                
                 <div class="game-controls">
-                    <button class="control-button save-button" onclick="window.saveGame()" aria-label="Save game">
+                    <button id="helpMeBtn" class="control-button help-button" aria-label="Help me" title="Get help with game options">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        Help me!
+                    </button>
+                    
+                    <button id="saveGameBtn" class="control-button save-button" aria-label="Save game" title="Save your progress">
                         <i class="fas fa-save" aria-hidden="true"></i>
                         Save Game
                     </button>
-                    <button class="control-button help-button" onclick="window.toggleContextHelp()" aria-label="Toggle help">
-                        <i class="fas fa-question-circle" aria-hidden="true"></i>
-                    </button>
-                    <button class="control-button end-button" onclick="window.endAdventure()" aria-label="End adventure">
+                    
+                    <button id="endAdventureBtn" class="control-button end-button" aria-label="End adventure" title="End your current adventure">
                         <i class="fas fa-times" aria-hidden="true"></i>
                         End Adventure
+                    </button>
+                    
+                    <button id="muteBtn" class="control-button mute-button" aria-label="Toggle sound" title="Mute/unmute game sounds">
+                        <i class="fas fa-volume-up" aria-hidden="true"></i>
+                        Mute
                     </button>
                 </div>
             </header>
@@ -127,7 +161,7 @@
                 </section>
 
                 <section id="choicesArea" class="choices-area" role="region" aria-label="Player choices">
-                    <!-- Choice buttons will be generated here -->
+                    <!-- Choice buttons and dialog container will be generated here -->
                 </section>
 
                 <section class="command-section" role="region" aria-label="Command input">
@@ -255,6 +289,42 @@
         <source src="assets/background-music.ogg" type="audio/ogg">
         Your browser does not support the audio element.
     </audio>
+
+    <!-- Help Popup Modal -->
+    <div id="helpPopup" class="help-popup modal-overlay" role="dialog" aria-labelledby="helpTitle" aria-hidden="true">
+        <div class="modal-content help-content">
+            <button class="close-button" aria-label="Close help">&times;</button>
+            <h2 id="helpTitle">Game Options Help</h2>
+            <div class="help-text">
+                <p>Welcome to Realms of Adventure! Here's how to play:</p>
+                <h3>Choice System</h3>
+                <p>On your turn, you'll be presented with 3 choices tailored to your character class. Each choice will affect the story and your character's development.</p>
+                
+                <h3>Command Input</h3>
+                <p>You can also type custom commands in the text box below the choices. The Game Master will respond to your commands and shape the story accordingly.</p>
+                
+                <h3>Character Classes</h3>
+                <ul>
+                    <li><strong>Warrior:</strong> Focus on combat and strength-based solutions</li>
+                    <li><strong>Mage:</strong> Use magic and knowledge to overcome challenges</li>
+                    <li><strong>Rogue:</strong> Rely on stealth, dexterity, and cunning</li>
+                    <li><strong>Cleric:</strong> Use divine powers and wisdom</li>
+                    <li><strong>Druid:</strong> Connect with nature and shape the environment</li>
+                </ul>
+                
+                <h3>Tips for Success</h3>
+                <ul>
+                    <li>Consider your character's strengths when making choices</li>
+                    <li>Pay attention to the story - details matter</li>
+                    <li>Try different approaches with custom commands</li>
+                    <li>Work with your party members to overcome challenges</li>
+                </ul>
+            </div>
+            <div class="help-actions">
+                <button id="closeHelpBtn" class="btn btn-primary">Got it!</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Error Modal Container -->
     <div id="modalContainer" role="dialog" aria-live="assertive"></div>
