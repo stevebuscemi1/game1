@@ -3,188 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Realms of Adventure - Multiplayer D&D-like Game">
+    <meta name="author" content="Steve Buscemi">
     <title>Realms of Adventure - Multiplayer D&D-like Game</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <!-- Background Music -->
-    <audio id="backgroundMusic" loop>
-        <source src="https://www.chosic.com/wp-content/uploads/2021/05/Adventure-320bit(chosic.com).mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
     
-    <div class="container">
-        <!-- Main Menu -->
-        <div id="mainMenu" class="screen main-menu active">
-            <div class="game-header">
-                <h1 class="game-title">Realms of Adventure</h1>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Progressive Web App Meta -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Realms of Adventure">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="css/styles.css" as="style">
+</head>
+<body class="game-body">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
+    
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen active" role="status" aria-live="polite">
+        <div class="loading-content">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <h2>Loading Realms of Adventure...</h2>
+            <p>Please wait while we prepare your adventure</p>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div id="main-content" class="game-container">
+        <!-- Main Menu Screen -->
+        <div id="mainMenu" class="screen active" role="main">
+            <header class="game-header">
+                <h1>Realms of Adventure</h1>
                 <p class="game-subtitle">Multiplayer D&D-like Game</p>
-            </div>
+            </header>
             
-            <div class="welcome-text">
-                Welcome to Realms of Adventure! A multiplayer text-based RPG inspired by Dungeons & Dragons. 
-                Gather your party of 1-5 players, create unique characters, and embark on an epic journey 
-                where your choices shape the narrative. Each player controls their own character and takes 
-                turns making decisions that affect the entire party's fate.
-            </div>
-            
-            <div class="option-grid">
-                <button class="menu-button" id="startNewAdventureBtn">
-                    <i class="fas fa-dice-d20"></i> Start a New Adventure
-                </button>
-                <button class="menu-button" id="showLoadGameBtn">
-                    <i class="fas fa-save"></i> Load Saved Game
-                </button>
-                <button class="menu-button" id="showHelpBtn">
-                    <i class="fas fa-question-circle"></i> How to Play
-                </button>
-            </div>
-        </div>
-        
-        <!-- Character Creation -->
-        <div id="characterCreation" class="screen character-creation">
-            <h2 class="creation-title">Create Your Adventure Party</h2>
-            <div id="creationContent"></div>
-        </div>
-        
-        <!-- Game Interface -->
-        <div id="gameInterface" class="screen game-interface">
-            <div class="game-controls">
-                <button class="control-button" onclick="saveGame()">
-                    <i class="fas fa-save"></i> Save Game
-                </button>
-                
-                <div class="game-logo">
-                    <i class="fas fa-dragon"></i>
-                    <span>Realms of Adventure</span>
-                    <i class="fas fa-dice-d20"></i>
+            <section class="menu-section" aria-label="Main Menu">
+                <div class="menu-description">
+                    <p>Welcome to Realms of Adventure! A multiplayer text-based RPG inspired by Dungeons &amp; Dragons. Gather your party of 1-5 players, create unique characters, and embark on an epic journey where your choices shape the narrative.</p>
                 </div>
                 
-                <div class="context-help-container">
-                    <button class="help-button" onclick="toggleContextHelp()">
-                        <i class="fas fa-question-circle"></i> Help
+                <nav class="menu-buttons" aria-label="Game Menu">
+                    <button id="startNewAdventureBtn" class="menu-button primary" aria-describedby="new-adventure-help">
+                        <i class="fas fa-play" aria-hidden="true"></i>
+                        Start a New Adventure
                     </button>
-                    <div id="contextHelpTooltip" class="help-tooltip">
-                        <button class="help-tooltip-close" onclick="toggleContextHelp()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <div class="help-tooltip-title">Gameplay Help</div>
-                        <div class="help-tooltip-content" id="helpTooltipContent">
-                            Select one of the three choices or type a command in the input field below. Your choices will shape the story and affect your character's development.
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="control-button" onclick="endAdventure()">
-                    <i class="fas fa-door-open"></i> End Adventure
-                </button>
-            </div>
-            
-            <div id="narrativeArea" class="narrative-area location-forest">
-                <div class="narrative-overlay"></div>
-                <div class="narrative-content">
-                    <div id="turnIndicator" class="turn-indicator"></div>
-                    <div id="sceneDescription" class="scene-description"></div>
-                    <div id="choicesArea" class="choices-area"></div>
+                    <div id="new-adventure-help" class="sr-only">Begin a new game adventure</div>
                     
-                    <div class="command-input-container">
-                        <input type="text" id="commandInput" class="command-input" placeholder="Enter a command for the Game Master..." onkeypress="if(event.key === 'Enter') { gameInterface.processCommand(gameInterface.getCommandInput()); gameInterface.clearCommandInput(); }">
-                    </div>
+                    <button id="showLoadGameBtn" class="menu-button secondary" aria-describedby="load-game-help">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        Load Saved Game
+                    </button>
+                    <div id="load-game-help" class="sr-only">Load a previously saved game</div>
+                    
+                    <button id="showHelpBtn" class="menu-button secondary" aria-describedby="help-help">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        How to Play
+                    </button>
+                    <div id="help-help" class="sr-only">View game instructions and help</div>
+                </nav>
+            </section>
+            
+            <footer class="menu-footer">
+                <p class="game-version">Version 1.0.0</p>
+                <p class="game-credits">Created with passion for adventure</p>
+            </footer>
+        </div>
+
+        <!-- Character Creation Screen -->
+        <div id="characterCreation" class="screen" role="main" aria-hidden="true">
+            <header class="screen-header">
+                <h2>Create Your Adventure Party</h2>
+                <button class="back-button" onclick="window.backToMenu()" aria-label="Back to main menu">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Back
+                </button>
+            </header>
+            
+            <main id="creationContent" class="creation-content" role="form">
+                <!-- Character creation content will be dynamically inserted here -->
+            </main>
+        </div>
+
+        <!-- Game Interface Screen -->
+        <div id="gameInterface" class="screen" role="main" aria-hidden="true">
+            <header class="game-header">
+                <h2>Realms of Adventure</h2>
+                <div class="game-controls">
+                    <button class="control-button save-button" onclick="window.saveGame()" aria-label="Save game">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        Save Game
+                    </button>
+                    <button class="control-button help-button" onclick="window.toggleContextHelp()" aria-label="Toggle help">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                    </button>
+                    <button class="control-button end-button" onclick="window.endAdventure()" aria-label="End adventure">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        End Adventure
+                    </button>
                 </div>
+            </header>
+
+            <div id="contextHelpTooltip" class="context-help-tooltip" role="tooltip" aria-hidden="true">
+                <div id="helpTooltipContent" class="help-content"></div>
             </div>
-            <div id="infoBar" class="info-bar"></div>
+
+            <main class="game-main">
+                <section id="turnIndicator" class="turn-indicator" role="status" aria-live="polite">
+                    <!-- Turn indicator will be updated dynamically -->
+                </section>
+
+                <section id="narrativeArea" class="narrative-area location-forest" role="region" aria-label="Game narrative">
+                    <div id="sceneDescription" class="scene-description" role="article" aria-live="polite">
+                        <!-- Scene description will be inserted here -->
+                    </div>
+                </section>
+
+                <section id="choicesArea" class="choices-area" role="region" aria-label="Player choices">
+                    <!-- Choice buttons will be generated here -->
+                </section>
+
+                <section class="command-section" role="region" aria-label="Command input">
+                    <label for="commandInput" class="sr-only">Enter command:</label>
+                    <input 
+                        type="text" 
+                        id="commandInput" 
+                        class="command-input" 
+                        placeholder="Enter your command..." 
+                        aria-describedby="command-help"
+                        autocomplete="off"
+                    >
+                    <div id="command-help" class="sr-only">Enter a command to interact with the game world</div>
+                    <button id="submitCommandBtn" class="command-submit" aria-label="Submit command">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    </button>
+                </section>
+            </main>
+
+            <footer id="infoBar" class="info-bar" role="status" aria-live="polite">
+                <!-- Game info will be displayed here -->
+            </footer>
         </div>
-        
-        <!-- Save/Load Area -->
-        <div id="saveLoadArea" class="screen">
-            <div class="save-load-area">
-                <h3 class="creation-title">Save/Load Game</h3>
-                <div id="saveLoadContent"></div>
-            </div>
-        </div>
-        
+
         <!-- Help Screen -->
-        <div id="helpScreen" class="screen">
-            <div class="help-screen">
-                <div class="help-content">
+        <div id="helpScreen" class="screen" role="main" aria-hidden="true">
+            <header class="screen-header">
+                <h2>Gameplay Help</h2>
+                <button class="back-button" onclick="window.backToMenu()" aria-label="Back to main menu">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Back
+                </button>
+            </header>
+            
+            <main class="help-content" role="article">
+                <section class="help-section">
                     <h3>How to Play</h3>
                     <p><strong>Realms of Adventure</strong> is a multiplayer text-based role-playing game where each player controls a unique character.</p>
-                    
+                </section>
+
+                <section class="help-section">
                     <h3>Game Setup</h3>
-                    <p>1. Start by selecting how many players will join (1-5).</p>
-                    <p>2. Each player creates a character by selecting a class, race, and background.</p>
-                    <p>3. Once all characters are created, the adventure begins!</p>
-                    
+                    <ol>
+                        <li>Start by selecting how many players will join (1-5).</li>
+                        <li>Each player creates a character by selecting a class, race, and background.</li>
+                        <li>Once all characters are created, the adventure begins!</li>
+                    </ol>
+                </section>
+
+                <section class="help-section">
                     <h3>Gameplay</h3>
-                    <p>• Players take turns in a fixed order, making decisions that shape the story.</p>
-                    <p>• On your turn, you'll be presented with 3 choices tailored to your character.</p>
-                    <p>• Your choices affect the narrative, your character's development, and the world around you.</p>
-                    <p>• You can also enter custom commands in the command input field to interact directly with the Game Master.</p>
-                    
+                    <ul>
+                        <li>Players take turns in a fixed order, making decisions that shape the story.</li>
+                        <li>On your turn, you'll be presented with 3 choices tailored to your character.</li>
+                        <li>Your choices affect the narrative, your character's development, and the world around you.</li>
+                        <li>You can also enter custom commands in the command input field to interact directly with the Game Master.</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
                     <h3>Character Progression</h3>
-                    <p>• Characters gain XP by completing quests, defeating enemies, and solving puzzles.</p>
-                    <p>• Level up at 200, 500, 1000, 2000, and 4000 XP.</p>
-                    <p>• Each level increases max health, improves attributes, and unlocks new abilities.</p>
-                    
+                    <ul>
+                        <li>Characters gain XP by completing quests, defeating enemies, and solving puzzles.</li>
+                        <li>Level up at 200, 500, 1000, 2000, and 4000 XP.</li>
+                        <li>Each level increases max health, improves attributes, and unlocks new abilities.</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
                     <h3>Vision and Luck</h3>
-                    <p>• Vision affects what you can perceive in the game world.</p>
-                    <p>• Luck influences random outcomes and critical successes/failures.</p>
-                    <p>• Both can change based on your choices, items, and story events.</p>
-                    
+                    <ul>
+                        <li>Vision affects what you can perceive in the game world.</li>
+                        <li>Luck influences random outcomes and critical successes/failures.</li>
+                        <li>Both can change based on your choices, items, and story events.</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
                     <h3>Saving and Loading</h3>
-                    <p>• Use the Save Game button to generate a save code.</p>
-                    <p>• Copy and store this code to continue your adventure later.</p>
-                    <p>• Use the Load Saved Game option on the start screen to resume.</p>
-                    
-                    <div class="centered-buttons">
-                        <button class="menu-button" onclick="backToMenu()">
-                            <i class="fas fa-arrow-left"></i> Back to Menu
-                        </button>
-                    </div>
-                </div>
-            </div>
+                    <ul>
+                        <li>Use the Save Game button to generate a save code.</li>
+                        <li>Copy and store this code to continue your adventure later.</li>
+                        <li>Use the Load Saved Game option on the start screen to resume.</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>Accessibility</h3>
+                    <ul>
+                        <li>Use Tab to navigate between interactive elements.</li>
+                        <li>Use Enter to activate buttons and submit commands.</li>
+                        <li>Use Escape to close modals and return to the main menu.</li>
+                        <li>Screen reader support is available for all game elements.</li>
+                    </ul>
+                </section>
+            </main>
+
+            <footer class="help-footer">
+                <button class="menu-button" onclick="window.backToMenu()" aria-label="Back to main menu">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Back to Menu
+                </button>
+            </footer>
+        </div>
+
+        <!-- Save/Load Screen -->
+        <div id="saveLoadArea" class="screen" role="main" aria-hidden="true">
+            <header class="screen-header">
+                <h2>Save/Load Game</h2>
+                <button class="back-button" onclick="window.backToMenu()" aria-label="Back to main menu">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Back
+                </button>
+            </header>
+            
+            <main id="saveLoadContent" class="save-load-content" role="region">
+                <!-- Save/Load content will be dynamically inserted here -->
+            </main>
         </div>
     </div>
-    
 
-    <!-- Add this line before your main.js script -->
-    <!-- script type="module" src="js/interactive-test.js"></script>
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" preload="none" aria-hidden="true">
+        <source src="assets/background-music.mp3" type="audio/mpeg">
+        <source src="assets/background-music.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
 
+    <!-- Error Modal Container -->
+    <div id="modalContainer" role="dialog" aria-live="assertive"></div>
 
-    <!-- Module Scripts -->
-    <script type="module" src="js/main.js"></script>
-    
-
-    <!-- Debugging Section -->
-    <div id="debug-panel" style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; z-index: 9999;">
-        <div>Debug Panel:</div>
-        <div id="debug-info">Checking functions...</div>
+    <!-- Debug Panel (only visible in development) -->
+    <div id="debugPanel" class="debug-panel hidden" role="complementary" aria-hidden="true">
+        <h3>Debug Panel:</h3>
+        <div id="debugContent">Checking functions...</div>
     </div>
 
-    <script>
-        // Debug function to check if functions are available
-        function checkFunctions() {
-            const debugInfo = document.getElementById('debug-info');
-            if (debugInfo) {
-                debugInfo.innerHTML = `
-                    startNewAdventure: ${typeof window.startNewAdventure}<br>
-                    showLoadGame: ${typeof window.showLoadGame}<br>
-                    showHelp: ${typeof window.showHelp}<br>
-                    backToMenu: ${typeof window.backToMenu}<br>
-                    saveGame: ${typeof window.saveGame}<br>
-                    endAdventure: ${typeof window.endAdventure}<br>
-                    toggleContextHelp: ${typeof window.toggleContextHelp}<br>
-                    loadGame: ${typeof window.loadGame}<br>
-                    gameController: ${typeof window.gameController}<br>
-                    uiManager: ${typeof window.uiManager}
-                `;
-            }
-        }
-        
-        // Check functions after a short delay to ensure modules are loaded
-        setTimeout(checkFunctions, 1000);
+    <!-- JavaScript Modules -->
+    <script type="module" src="js/main.js"></script>
+    
+    <!-- Fallback for browsers that don't support modules -->
+    <script nomodule>
+        document.getElementById('loadingScreen').innerHTML = `
+            <div class="error-content">
+                <h2>Browser Not Supported</h2>
+                <p>Your browser doesn't support JavaScript modules. Please update your browser or use a modern browser to play this game.</p>
+                <p>Recommended browsers: Chrome, Firefox, Safari, Edge</p>
+            </div>
+        `;
     </script>
-
 </body>
 </html>
