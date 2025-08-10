@@ -1,0 +1,11 @@
+/* Help Screen Specific Styles */
+.help-screen {
+  background: rgba(139, 69, 19, 0.2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  text-align: center;
+}

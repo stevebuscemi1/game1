@@ -1,0 +1,34 @@
+/* Main Menu Layout */
+.main-menu {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-text {
+  font-size: 1.3em;
+  margin-bottom: var(--spacing-xl);
+  max-width: 700px;
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+/* Option Grid */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+/* Centered Button Layout */
+.centered-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.centered-buttons .menu-button {
+  margin: 0;
+}

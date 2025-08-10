@@ -1,0 +1,16 @@
+this.backgroundMusic.src = 'https://www.chosic.com/wp-content/uploads/2021/05/Adventure-320bit(chosic.com).mp3';
+
+Adventure by Alexander Nakarada | https://creatorchords.com
+Music promoted by https://www.chosic.com/free-music/all/
+Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+ 
+
+
+# If you have Python 3:
+# python -m http.server 8000
+
+# If you have Node.js:
+# npx http-server
+
+# Or use VS Code's Live Server extension

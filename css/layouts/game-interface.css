@@ -1,0 +1,136 @@
+/* Game Interface Layout */
+.game-interface {
+  height: 100vh;
+  padding: var(--spacing-lg);
+}
+
+/* Narrative Area */
+.narrative-area {
+  flex: 1;
+  background: rgba(139, 69, 19, 0.1);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  overflow-y: auto;
+  max-height: 60vh;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+.narrative-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-bg-overlay);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.narrative-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Turn Indicator */
+.turn-indicator {
+  font-family: var(--font-secondary);
+  font-size: 1.5em;
+  color: var(--color-secondary);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(139, 69, 19, 0.3);
+  border-radius: var(--radius-sm);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Scene Description */
+.scene-description {
+  font-size: 1.1em;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+}
+
+.typewriter-text {
+  overflow: hidden;
+  white-space: pre-wrap;
+  animation: typing 2s steps(40, end);
+}
+
+/* Choices Area */
+.choices-area {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Command Input Container */
+.command-input-container {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-lg);
+}
+
+/* Help Content */
+.help-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.help-content h3 {
+  font-family: var(--font-secondary);
+  font-size: 1.5em;
+  color: var(--color-secondary);
+  margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+  text-align: center;
+}
+
+.help-content p {
+  margin-bottom: var(--spacing-md);
+  line-height: 1.8;
+}
+
+.help-content strong {
+  color: var(--color-secondary);
+}
+
+/* Character Creation Layout */
+.character-creation {
+  text-align: center;
+}
+
+.creation-title {
+  font-family: var(--font-secondary);
+  font-size: 2em;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Location Backgrounds */
+.location-forest {
+  background-image: url('https://picsum.photos/seed/fantasy-background/1200/800.jpg');
+}
+
+.location-dungeon {
+  background-image: url('https://picsum.photos/seed/fantasy-dungeon/1200/800.jpg');
+}
+
+.location-village {
+  background-image: url('https://picsum.photos/seed/fantasy-village/1200/800.jpg');
+}
+
+.location-castle {
+  background-image: url('https://picsum.photos/seed/fantasy-castle/1200/800.jpg');
+}
+
+.location-mountain {
+  background-image: url('https://picsum.photos/seed/fantasy-mountain/1200/800.jpg');
+}

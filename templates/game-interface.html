@@ -1,0 +1,46 @@
+<div class="screen game-interface">
+    <div class="game-controls">
+        <button class="control-button" onclick="saveGame()">
+            <i class="fas fa-save"></i> Save Game
+        </button>
+        
+        <div class="game-logo">
+            <i class="fas fa-dragon"></i>
+            <span>Realms of Adventure</span>
+            <i class="fas fa-dice-d20"></i>
+        </div>
+        
+        <div class="context-help-container">
+            <button class="help-button" onclick="toggleContextHelp()">
+                <i class="fas fa-question-circle"></i> Help
+            </button>
+            <div id="contextHelpTooltip" class="help-tooltip">
+                <button class="help-tooltip-close" onclick="toggleContextHelp()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="help-tooltip-title">Gameplay Help</div>
+                <div class="help-tooltip-content" id="helpTooltipContent">
+                    Select one of the three choices or type a command in the input field below. Your choices will shape the story and affect your character's development.
+                </div>
+            </div>
+        </div>
+        
+        <button class="control-button" onclick="endAdventure()">
+            <i class="fas fa-door-open"></i> End Adventure
+        </button>
+    </div>
+    
+    <div id="narrativeArea" class="narrative-area location-forest">
+        <div class="narrative-overlay"></div>
+        <div class="narrative-content">
+            <div id="turnIndicator" class="turn-indicator"></div>
+            <div id="sceneDescription" class="scene-description"></div>
+            <div id="choicesArea" class="choices-area"></div>
+            
+            <div class="command-input-container">
+                <input type="text" id="commandInput" class="command-input" placeholder="Enter a command for the Game Master..." onkeypress="gameInterface.handleCommandKeyPress(event)">
+            </div>
+        </div>
+    </div>
+    <div id="infoBar" class="info-bar"></div>
+</div>

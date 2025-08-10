@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Realms of Adventure - Test Checklist</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-item { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background-color: #d4edda; }
+        .fail { background-color: #f8d7da; }
+        .error { background-color: #fff3cd; }
+    </style>
+</head>
+<body>
+    <h1>Realms of Adventure - Test Checklist</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        const tests = [
+            {
+                name: "Global functions available",
+                test: () => {
+                    const functions = ['startNewAdventure', 'showLoadGame', 'showHelp', 'backToMenu'];
+                    return functions.every(fn => typeof window[fn] === 'function');
+                }
+            },
+            {
+                name: "Game controller available",
+                test: () => typeof window.gameController === 'object'
+            },
+            {
+                name: "UI manager available",
+                test: () => typeof window.uiManager === 'object'
+            },
+            {
+                name: "Sound manager available",
+                test: () => typeof window.soundManager === 'object'
+            },
+            {
+                name: "Character creator available",
+                test: () => typeof window.characterCreator === 'object'
+            },
+            {
+                name: "Game interface available",
+                test: () => typeof window.gameInterface === 'object'
+            },
+            {
+                name: "Main menu buttons exist",
+                test: () => {
+                    const buttons = ['startNewAdventureBtn', 'showLoadGameBtn', 'showHelpBtn'];
+                    return buttons.every(id => document.getElementById(id) !== null);
+                }
+            },
+            {
+                name: "All screens exist",
+                test: () => {
+                    const screens = ['mainMenu', 'characterCreation', 'gameInterface', 'saveLoadArea', 'helpScreen'];
+                    return screens.every(id => document.getElementById(id) !== null);
+                }
+            }
+        ];
+
+        function runTests() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<h2>Test Results</h2>';
+            
+            tests.forEach(test => {
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                
+                try {
+                    const passed = test.test();
+                    div.className += passed ? ' pass' : ' fail';
+                    div.innerHTML = `<strong>${test.name}:</strong> ${passed ? 'PASS' : 'FAIL'}`;
+                } catch (error) {
+                    div.className += ' error';
+                    div.innerHTML = `<strong>${test.name}:</strong> ERROR - ${error.message}`;
+                }
+                
+                results.appendChild(div);
+            });
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

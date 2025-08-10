@@ -1,0 +1,126 @@
+/* Form Inputs */
+.name-input,
+.command-input,
+.save-load-textarea {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  padding: var(--spacing-md);
+  font-family: var(--font-primary);
+  font-size: 1em;
+  transition: all var(--transition-fast);
+}
+
+.name-input {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+  height: 50px;
+}
+
+.command-input {
+  width: 100%;
+  max-width: 600px;
+  height: 50px;
+}
+
+.save-load-textarea {
+  width: 100%;
+  height: 200px;
+  font-family: var(--font-mono);
+  resize: vertical;
+}
+
+/* Input Focus States */
+.name-input:focus,
+.command-input:focus,
+.save-load-textarea:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Input Placeholders */
+.name-input::placeholder,
+.command-input::placeholder {
+  color: var(--color-primary-light);
+  font-style: italic;
+}
+
+/* Progress Bars */
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: var(--spacing-sm) 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.health-bar .progress-fill {
+  background: linear-gradient(90deg, #8b0000, var(--color-health));
+}
+
+.xp-bar .progress-fill {
+  background: linear-gradient(90deg, #4169e1, var(--color-xp));
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 0.9em;
+  color: var(--color-text);
+  margin-top: var(--spacing-xs);
+}
+
+/* Form Layouts */
+.creation-step {
+  background: rgba(139, 69, 19, 0.2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.save-load-area {
+  background: rgba(139, 69, 19, 0.2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  text-align: center;
+}
+
+.help-screen {
+  background: rgba(139, 69, 19, 0.2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  text-align: center;
+}

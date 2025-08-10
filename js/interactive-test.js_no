@@ -1,0 +1,122 @@
+class InteractiveTester {
+    constructor() {
+        this.setupTestButtons();
+    }
+
+    setupTestButtons() {
+         Add test buttons to the page
+        const testPanel = document.createElement('div');
+        testPanel.style.cssText = `
+            position fixed;
+            top 10px;
+            right 10px;
+            background rgba(0,0,0,0.8);
+            color white;
+            padding 15px;
+            border-radius 5px;
+            z-index 10000;
+            font-family monospace;
+            font-size 12px;
+        `;
+        testPanel.innerHTML = `
+            h4Test Panelh4
+            button onclick=tester.testMainMenuButtons()Test Main Menubutton
+            button onclick=tester.testScreenSwitching()Test Screensbutton
+            button onclick=tester.testGameFlow()Test Game Flowbutton
+            button onclick=tester.showDebugInfo()Show Debug Infobutton
+            div id=test-output style=margin-top 10px; max-height 200px; overflow-y auto;div
+        `;
+        document.body.appendChild(testPanel);
+        
+        window.tester = this;
+    }
+
+    log(message) {
+        const output = document.getElementById('test-output');
+        if (output) {
+            output.innerHTML += `div${new Date().toLocaleTimeString()} ${message}div`;
+            output.scrollTop = output.scrollHeight;
+        }
+        console.log(message);
+    }
+
+    testMainMenuButtons() {
+        this.log('Testing main menu buttons...');
+        
+        const buttons = [
+            { id 'startNewAdventureBtn', name 'Start New Adventure' },
+            { id 'showLoadGameBtn', name 'Load Saved Game' },
+            { id 'showHelpBtn', name 'How to Play' }
+        ];
+
+        buttons.forEach(({ id, name }) = {
+            const button = document.getElementById(id);
+            if (button) {
+                this.log(`✓ Found ${name} button`);
+                 Test click
+                button.click();
+                setTimeout(() = {
+                    this.log(`✓ Clicked ${name} button`);
+                }, 100);
+            } else {
+                this.log(`✗ Missing ${name} button`);
+            }
+        });
+    }
+
+    testScreenSwitching() {
+        this.log('Testing screen switching...');
+        
+        const screens = ['mainMenu', 'characterCreation', 'gameInterface', 'helpScreen'];
+        
+        screens.forEach(screenId = {
+            this.log(`Testing screen ${screenId}`);
+            if (window.uiManager) {
+                window.uiManager.showScreen(screenId);
+                setTimeout(() = {
+                    const screen = document.getElementById(screenId);
+                    if (screen && screen.classList.contains('active')) {
+                        this.log(`✓ Screen ${screenId} switched successfully`);
+                    } else {
+                        this.log(`✗ Screen ${screenId} switch failed`);
+                    }
+                }, 200);
+            } else {
+                this.log(`✗ UI Manager not available`);
+            }
+        });
+    }
+
+    testGameFlow() {
+        this.log('Testing game flow...');
+        
+        if (window.gameController) {
+            this.log('✓ Game controller available');
+            
+             Test starting new adventure
+            try {
+                window.gameController.startNewAdventure();
+                this.log('✓ Start new adventure called');
+            } catch (error) {
+                this.log(`✗ Start new adventure failed ${error.message}`);
+            }
+        } else {
+            this.log('✗ Game controller not available');
+        }
+    }
+
+    showDebugInfo() {
+        this.log('=== DEBUG INFO ===');
+        this.log(`Global functions available ${Object.keys(window).filter(key = typeof window[key] === 'function').join(', ')}`);
+        this.log(`Game controller ${typeof window.gameController}`);
+        this.log(`UI manager ${typeof window.uiManager}`);
+        this.log(`Current screen ${document.querySelector('.screen.active').id  'none'}`);
+        this.log(`Total screens ${document.querySelectorAll('.screen').length}`);
+        this.log(`Total buttons ${document.querySelectorAll('button').length}`);
+    }
+}
+
+ Initialize tester when DOM is loaded
+document.addEventListener('DOMContentLoaded', () = {
+    new InteractiveTester();
+});

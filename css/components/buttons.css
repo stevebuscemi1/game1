@@ -1,0 +1,152 @@
+/* Base Button Styles */
+.menu-button,
+.control-button,
+.help-button {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: var(--color-text);
+  border: 2px solid var(--color-secondary);
+  padding: var(--spacing-md) var(--spacing-xl);
+  margin: var(--spacing-sm);
+  font-size: 1.1em;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.menu-button::before,
+.control-button::before,
+.help-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.menu-button:hover::before,
+.control-button:hover::before,
+.help-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.menu-button:hover,
+.control-button:hover,
+.help-button:hover {
+  background: linear-gradient(135deg, var(--color-primary-light), #cd853f);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.menu-button:active,
+.control-button:active,
+.help-button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Specific Button Variants */
+.menu-button {
+  min-width: 250px;
+  max-width: 300px;
+  height: 60px;
+}
+
+.control-button {
+  font-size: 0.9em;
+  height: 40px;
+  min-width: 120px;
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.control-button::before {
+  width: 200px;
+  height: 200px;
+}
+
+.help-button {
+  font-size: 0.9em;
+  height: 40px;
+  min-width: 80px;
+  padding: 8px 12px;
+}
+
+.help-button::before {
+  width: 150px;
+  height: 150px;
+}
+
+.choice-button {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: var(--color-text);
+  border: 2px solid var(--color-secondary);
+  padding: var(--spacing-md);
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-align: left;
+  line-height: 1.4;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.choice-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.choice-button:hover::before {
+  left: 100%;
+}
+
+.choice-button:hover {
+  background: linear-gradient(135deg, var(--color-primary-light), #cd853f);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.choice-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Button States */
+.choice-selected {
+  animation: choiceSelected 0.6s ease-in-out;
+}
+
+.turn-change-animation {
+  animation: turnChange 0.5s ease-in-out;
+}
+
+.health-change {
+  animation: healthChange 0.8s ease-in-out;
+}
+
+.command-processing {
+  animation: commandProcessing 1s ease-in-out;
+}

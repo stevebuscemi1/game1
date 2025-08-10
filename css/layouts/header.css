@@ -1,0 +1,78 @@
+/* Game Header */
+.game-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.game-title {
+  font-family: var(--font-secondary);
+  font-size: 2.5em;
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: var(--spacing-md);
+}
+
+.game-subtitle {
+  font-size: 1.2em;
+  color: var(--color-secondary-light);
+  font-style: italic;
+}
+
+/* Game Controls */
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.game-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-md);
+  padding: 8px 15px;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-fast);
+  height: 40px;
+}
+
+.game-logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.game-logo i {
+  margin-right: var(--spacing-md);
+  font-size: 1.2em;
+}
+
+/* Info Bar */
+.info-bar {
+  background: rgba(139, 69, 19, 0.3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.player-info {
+  color: var(--color-secondary);
+  font-weight: bold;
+}
+
+.party-info {
+  color: var(--color-secondary-light);
+  margin-top: var(--spacing-xs);
+}
