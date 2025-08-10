@@ -1,5 +1,5 @@
 // js/main.js
-// Main Entry Point
+// Main Entry Point with all updates integrated
 import { soundManager } from './utils/sound.js';
 import { uiManager } from './components/ui-manager.js';
 import { characterCreator } from './components/character-creator.js';
@@ -126,7 +126,12 @@ class GameApplication {
             { id: 'startNewAdventureBtn', handler: this.handleStartNewAdventure.bind(this) },
             { id: 'showLoadGameBtn', handler: this.handleShowLoadGame.bind(this) },
             { id: 'showHelpBtn', handler: this.handleShowHelp.bind(this) },
-            { id: 'submitCommandBtn', handler: this.handleSubmitCommand.bind(this) }
+            { id: 'submitCommandBtn', handler: this.handleSubmitCommand.bind(this) },
+            { id: 'helpMeBtn', handler: this.handleHelpMe.bind(this) },
+            { id: 'saveGameBtn', handler: this.handleSaveGame.bind(this) },
+            { id: 'endAdventureBtn', handler: this.handleEndAdventure.bind(this) },
+            { id: 'muteBtn', handler: this.handleMute.bind(this) },
+            { id: 'closeHelpBtn', handler: this.handleCloseHelp.bind(this) }
         ];
         
         buttons.forEach(({ id, handler }) => {
@@ -174,6 +179,15 @@ class GameApplication {
                 this.handleBackButton(e);
             });
         });
+        
+        // Setup modal close buttons
+        const closeButtons = document.querySelectorAll('.close-button');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleCloseModal(e);
+            });
+        });
     }
 
     async initializeApplication() {
@@ -211,6 +225,9 @@ class GameApplication {
         window.endAdventure = () => this.handleEndAdventure();
         window.toggleContextHelp = () => this.handleToggleContextHelp();
         window.loadGame = () => this.handleLoadGame();
+        window.toggleMute = () => this.handleMute();
+        window.showHelpMe = () => this.handleHelpMe();
+        window.closeHelp = () => this.handleCloseHelp();
         
         console.log('🌐 Global instances setup complete');
     }
@@ -250,7 +267,11 @@ class GameApplication {
         const buttons = [
             { id: 'startNewAdventureBtn', name: 'Start New Adventure' },
             { id: 'showLoadGameBtn', name: 'Load Saved Game' },
-            { id: 'showHelpBtn', name: 'How to Play' }
+            { id: 'showHelpBtn', name: 'How to Play' },
+            { id: 'helpMeBtn', name: 'Help Me' },
+            { id: 'saveGameBtn', name: 'Save Game' },
+            { id: 'endAdventureBtn', name: 'End Adventure' },
+            { id: 'muteBtn', name: 'Mute' }
         ];
         
         for (const { id, name } of buttons) {
@@ -266,7 +287,7 @@ class GameApplication {
     async testScreenAvailability() {
         console.log('🖥️ Testing screen availability...');
         
-        const screens = ['mainMenu', 'characterCreation', 'gameInterface', 'helpScreen'];
+        const screens = ['mainMenu', 'characterCreation', 'gameInterface', 'helpScreen', 'saveLoadArea'];
         for (const screenId of screens) {
             const screen = document.getElementById(screenId);
             if (screen) {
@@ -344,6 +365,88 @@ class GameApplication {
         }
     }
 
+    handleHelpMe(event) {
+        try {
+            console.log('🎮 Help Me clicked');
+            soundManager.playClickSound();
+            
+            const helpPopup = document.getElementById('helpPopup');
+            if (helpPopup) {
+                helpPopup.setAttribute('aria-hidden', 'false');
+                helpPopup.style.display = 'flex';
+                
+                // Focus on close button for accessibility
+                const closeBtn = helpPopup.querySelector('.close-button');
+                if (closeBtn) {
+                    closeBtn.focus();
+                }
+                
+                // Announce to screen readers
+                accessibilityManager.announceToScreenReader('Help dialog opened');
+            }
+        } catch (error) {
+            this.handleError(error, 'Failed to show help');
+        }
+    }
+
+    handleSaveGame(event) {
+        try {
+            console.log('🎮 Save Game clicked');
+            soundManager.playClickSound();
+            gameController.saveGame();
+        } catch (error) {
+            this.handleError(error, 'Failed to save game');
+        }
+    }
+
+    handleEndAdventure(event) {
+        try {
+            console.log('🎮 End Adventure clicked');
+            soundManager.playClickSound();
+            gameController.endAdventure();
+        } catch (error) {
+            this.handleError(error, 'Failed to end adventure');
+        }
+    }
+
+    handleMute(event) {
+        try {
+            console.log('🎮 Mute clicked');
+            soundManager.playClickSound();
+            const isMuted = soundManager.toggleMute();
+            
+            // Announce to screen readers
+            const message = isMuted ? 'Sound muted' : 'Sound unmuted';
+            accessibilityManager.announceToScreenReader(message);
+        } catch (error) {
+            this.handleError(error, 'Failed to toggle mute');
+        }
+    }
+
+    handleCloseHelp(event) {
+        try {
+            console.log('🎮 Close Help clicked');
+            soundManager.playClickSound();
+            
+            const helpPopup = document.getElementById('helpPopup');
+            if (helpPopup) {
+                helpPopup.setAttribute('aria-hidden', 'true');
+                helpPopup.style.display = 'none';
+                
+                // Return focus to help button
+                const helpButton = document.getElementById('helpMeBtn');
+                if (helpButton) {
+                    helpButton.focus();
+                }
+                
+                // Announce to screen readers
+                accessibilityManager.announceToScreenReader('Help dialog closed');
+            }
+        } catch (error) {
+            this.handleError(error, 'Failed to close help');
+        }
+    }
+
     handleBackButton(event) {
         try {
             console.log('🎮 Back button clicked');
@@ -351,6 +454,16 @@ class GameApplication {
             uiManager.showScreen('mainMenu');
         } catch (error) {
             this.handleError(error, 'Failed to go back');
+        }
+    }
+
+    handleCloseModal(event) {
+        try {
+            console.log('🎮 Close modal clicked');
+            soundManager.playClickSound();
+            uiManager.closeTopModal();
+        } catch (error) {
+            this.handleError(error, 'Failed to close modal');
         }
     }
 
@@ -448,11 +561,21 @@ class GameApplication {
         } else if (modifiers.ctrl && key === 'h') {
             event.preventDefault();
             this.handleShowHelp();
+        } else if (modifiers.ctrl && key === 'm') {
+            event.preventDefault();
+            this.handleMute();
         }
     }
 
     handleEscapeKey() {
         console.log('🚪 Escape key pressed');
+        
+        // Close help popup if open
+        const helpPopup = document.getElementById('helpPopup');
+        if (helpPopup && helpPopup.style.display === 'flex') {
+            this.handleCloseHelp();
+            return;
+        }
         
         // Close any open modals first
         if (uiManager.modals.length > 0) {
