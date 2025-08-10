@@ -2,7 +2,7 @@
 // Update to handle back buttons better
 
 // Add method to create a standardized back button
-createBackButton(clickHandler, label = 'Back') {
+createBackButton(clickHandler, label = 'Back') ;
     const backButton = helpers.createElement('button', 'back-button');
     backButton.innerHTML = `<i class="fas fa-arrow-left"></i> ${label}`;
     backButton.setAttribute('aria-label', label);
@@ -19,7 +19,7 @@ createBackButton(clickHandler, label = 'Back') {
 }
 
 // Update showScreen to handle back navigation
-showScreen(screenId) {
+showScreen(screenId) ;
     this.currentScreen = screenId;
     helpers.showScreen(screenId);
     soundManager.playClickSound();
@@ -38,7 +38,7 @@ showScreen(screenId) {
 }
 
 // Update createModal to include close button by default
-createModal(content, options = {}) {
+createModal(content, options = {}) ;
     const modal = helpers.createElement('div', 'modal-overlay');
     const modalContent = helpers.createElement('div', 'modal-content');
     modalContent.innerHTML = content;
